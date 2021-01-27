@@ -129,7 +129,7 @@ module ShopifyApp
 
     test "#new should trust the shop param over the current session" do
       previously_logged_in_shop_id = 1
-      session[:shopify] = previously_logged_in_shop_id
+      session[:shop_id] = previously_logged_in_shop_id
       session['shopify.granted_storage_access'] = true
       new_shop_domain = "new-shop.myshopify.com"
       get :new, params: { shop: new_shop_domain }
@@ -233,13 +233,13 @@ module ShopifyApp
 
     test "#destroy should clear shopify from session and redirect to login with notice" do
       shop_id = 1
-      session[:shopify] = shop_id
+      session[:shop_id] = shop_id
       session[:shopify_domain] = 'shop1.myshopify.com'
       session[:shopify_user] = { 'id' => 1, 'email' => 'foo@example.com' }
 
       get :destroy
 
-      assert_nil session[:shopify]
+      assert_nil session[:shop_id]
       assert_nil session[:shopify_domain]
       assert_nil session[:shopify_user]
       assert_redirected_to login_path
@@ -249,7 +249,7 @@ module ShopifyApp
     test '#destroy should redirect with notice in spanish' do
       I18n.locale = :es
       shop_id = 1
-      session[:shopify] = shop_id
+      session[:shop_id] = shop_id
       session[:shopify_domain] = 'shop1.myshopify.com'
 
       get :destroy
